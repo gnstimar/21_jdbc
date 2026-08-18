@@ -20,8 +20,43 @@ public class Main {
          * Process ResultSet
          * Close JDBC Resources
          * */
+        //statement();
+        preparedStatement();
+
+    }
+
+    // We want to add parameters to the query
+    private static void preparedStatement() {
+        // Establish Database Connection + Closing happens here too
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             // Create PreparedStatement
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, name, class_group, create_date FROM student WHERE class_group = ?;")
+        ) {
+            IO.println("Database connection successfully established.");
+
+            String classGroup = "G1";
+            preparedStatement.setString(1, classGroup);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                IO.println("Students in class group " + classGroup);
+                // Process ResultSet
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String name = resultSet.getString("name");
+                    String class_group = resultSet.getString("class_group");
+                    LocalDateTime createDate = resultSet.getTimestamp("create_date").toLocalDateTime();
+                    String formattedDateTime = createDate.format(DateTimeFormatter.ofPattern("EEEE MMMM dd yyyy"));
+
+                    IO.println("ID: " + id + "| name: " + name + "| class_group: " + class_group + "| create_date: " + formattedDateTime);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error while connecting to the database: " + e.getMessage());
+        }
+    }
 
 
+    private static void statement() {
         // Establish Database Connection + Closing happens here too
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              // Create Statement
@@ -45,8 +80,7 @@ public class Main {
                 IO.println("ID: " + id + "| name: " + name + "| class_group: " + class_group + "| create_date: " + formattedDateTime);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error while connecting to the database: " + e.getMessage());
         }
-
     }
 }
