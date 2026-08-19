@@ -1,6 +1,11 @@
 package se.lexicon;
 
 
+import se.lexicon.dao.StudentDao;
+import se.lexicon.dao.StudentDaoImpl;
+import se.lexicon.db.DatabaseConnection;
+
+import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,7 +26,17 @@ public class Main {
          * Close JDBC Resources
          * */
         //statement();
-        preparedStatement();
+        //preparedStatement();
+
+        DataSource dataSource = DatabaseConnection.getMySQLDataSource();
+        try (Connection connection = dataSource.getConnection();) {
+            StudentDao studentDao = new StudentDaoImpl(connection);
+
+            studentDao.findAll().forEach(IO::println);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
