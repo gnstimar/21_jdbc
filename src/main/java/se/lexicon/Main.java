@@ -4,6 +4,7 @@ package se.lexicon;
 import se.lexicon.dao.StudentDao;
 import se.lexicon.dao.StudentDaoImpl;
 import se.lexicon.db.DatabaseConnection;
+import se.lexicon.model.Student;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -33,6 +34,11 @@ public class Main {
             StudentDao studentDao = new StudentDaoImpl(connection);
 
             studentDao.findAll().forEach(IO::println);
+
+//            Student newStudent = new Student("Tom Hay2", "G62");
+//            Student savedStudent = studentDao.save(newStudent);
+//            IO.println("Saved student: " + savedStudent);
+
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
