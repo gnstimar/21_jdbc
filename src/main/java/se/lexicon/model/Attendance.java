@@ -1,21 +1,22 @@
 package se.lexicon.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Attendance {
     private int id;
     private Student student;
-    private LocalDateTime attendanceDate;
+    private LocalDate attendanceDate;
     private AttendanceStatus attendanceStatus;
 
-    public Attendance(int id, Student student, LocalDateTime attendanceDate, AttendanceStatus attendanceStatus) {
+    public Attendance(int id, Student student, LocalDate attendanceDate, AttendanceStatus attendanceStatus) {
         this.id = id;
         this.student = student;
         this.attendanceDate = attendanceDate;
         this.attendanceStatus = attendanceStatus;
     }
 
-    public Attendance(Student student, LocalDateTime attendanceDate, AttendanceStatus attendanceStatus) {
+    public Attendance(Student student, LocalDate attendanceDate, AttendanceStatus attendanceStatus) {
         this.student = student;
         this.attendanceDate = attendanceDate;
         this.attendanceStatus = attendanceStatus;
@@ -42,11 +43,11 @@ public class Attendance {
         this.student = student;
     }
 
-    public LocalDateTime getAttendanceDate() {
+    public LocalDate getAttendanceDate() {
         return attendanceDate;
     }
 
-    public void setAttendanceDate(LocalDateTime attendanceDate) {
+    public void setAttendanceDate(LocalDate attendanceDate) {
         this.attendanceDate = attendanceDate;
     }
 

@@ -1,13 +1,18 @@
 package se.lexicon;
 
 
+import se.lexicon.dao.AttendanceDao;
+import se.lexicon.dao.AttendanceDaoImpl;
 import se.lexicon.dao.StudentDao;
 import se.lexicon.dao.StudentDaoImpl;
 import se.lexicon.db.DatabaseConnection;
+import se.lexicon.model.Attendance;
+import se.lexicon.model.AttendanceStatus;
 import se.lexicon.model.Student;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -33,13 +38,19 @@ public class Main {
         try (Connection connection = dataSource.getConnection();) {
             StudentDao studentDao = new StudentDaoImpl(connection);
 
+            Student newStudent = new Student("Tom Hay3", "G62");
+            Student savedStudent = studentDao.save(newStudent);
+            IO.println("Saved student: " + savedStudent);
+
             studentDao.findAll().forEach(IO::println);
 
-//            Student newStudent = new Student("Tom Hay2", "G62");
-//            Student savedStudent = studentDao.save(newStudent);
-//            IO.println("Saved student: " + savedStudent);
+            AttendanceDao attendanceDao = new AttendanceDaoImpl(connection);
 
+            Attendance newAttendance = new Attendance(newStudent, LocalDate.of(2026, 2, 8), AttendanceStatus.valueOf("PRESENT"));
+            IO.println(newAttendance);
+            attendanceDao.save(newAttendance);
 
+            attendanceDao.findAll().forEach(IO::println);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -51,7 +62,7 @@ public class Main {
         // Establish Database Connection + Closing happens here too
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              // Create PreparedStatement
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, name, class_group, create_date FROM student WHERE class_group = ?;")
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, name, class_group, create_date FROM student WHERE class_group = ?")
         ) {
             IO.println("Database connection successfully established.");
 
